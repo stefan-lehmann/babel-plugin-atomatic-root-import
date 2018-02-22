@@ -14,7 +14,7 @@ const replacePrefix = (path, opts = [], sourceFile) => {
     if (option.rootPathPrefix && typeof option.rootPathPrefix === 'string') {
       rootPathPrefix = option.rootPathPrefix;
     } else {
-      rootPathPrefix = '~';
+      rootPathPrefix = '';
     }
 
     if (hasRootPathPrefixInString(path, rootPathPrefix)) {

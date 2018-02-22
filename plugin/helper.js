@@ -3,16 +3,15 @@ import path from 'path';
 
 const root = slash(global.rootPath || process.cwd());
 
-export const hasRootPathPrefixInString = (importPath, rootPathPrefix = '~') => {
+export const hasRootPathPrefixInString = (importPath, rootPathPrefix = '') => {
   let containsRootPathPrefix = false;
 
   if (typeof importPath === 'string') {
-    if (importPath.substring(0, 1) === rootPathPrefix) {
+    if (importPath.substring(0, rootPathPrefix.length) === rootPathPrefix) {
       containsRootPathPrefix = true;
     }
 
-    const firstTwoCharactersOfString = importPath.substring(0, 2);
-    if (firstTwoCharactersOfString === `${rootPathPrefix}/`) {
+    if (importPath.substring(0, rootPathPrefix.length + 1) === `${rootPathPrefix}/`) {
       containsRootPathPrefix = true;
     }
   }
@@ -21,14 +20,13 @@ export const hasRootPathPrefixInString = (importPath, rootPathPrefix = '~') => {
 };
 
 export const transformRelativeToRootPath = (importPath, rootPathSuffix, rootPathPrefix, sourceFile = '') => {
-  let withoutRootPathPrefix = '';
-  if (hasRootPathPrefixInString(importPath, rootPathPrefix)) {
-    if (importPath.substring(0, 1) === '/') {
-      withoutRootPathPrefix = importPath.substring(1, importPath.length);
-    } else {
-      withoutRootPathPrefix = importPath.substring(2, importPath.length);
-    }
 
+  if (
+    importPath.indexOf(root) === -1 &&
+    importPath.substring(0, rootPathPrefix.length + 1) === rootPathPrefix + '/' &&
+    hasRootPathPrefixInString(importPath, rootPathPrefix)) {
+
+    const withoutRootPathPrefix = importPath.substring(rootPathPrefix.length + 1, importPath.length);
     const absolutePath = path.resolve(`${rootPathSuffix ? rootPathSuffix : './'}/${withoutRootPathPrefix}`);
     let sourcePath = sourceFile.substring(0, sourceFile.lastIndexOf('/'));
 
@@ -37,9 +35,7 @@ export const transformRelativeToRootPath = (importPath, rootPathSuffix, rootPath
       sourcePath = sourcePath.substring(root.length + 1);
     }
 
-    sourcePath = path.resolve(sourcePath);
-
-    let relativePath = slash(path.relative(sourcePath, absolutePath));
+    let relativePath = slash(path.relative(path.resolve(sourcePath), absolutePath));
 
     // if file is located in the same folder
     if (relativePath.indexOf('../') !== 0) {
