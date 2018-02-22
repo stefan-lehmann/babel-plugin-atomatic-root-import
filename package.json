@@ -1,15 +1,19 @@
 {
-  "name": "babel-plugin-root-import",
-  "version": "5.1.0",
+  "name": "babel-plugin-atomatic-root-import",
+  "version": "5.2.0",
   "description": "Babel Plugin to enable relative root-import",
-  "author": "Michael J. Zoidl <github@michaelzoidl.com>",
+  "author": "Michael J. Zoidl <github@michaelzoidl.com>, Stefan Lehmann <atomatic@lehmann.st>",
   "license": "MIT",
   "main": "index.js",
   "files": [
     "index.js",
     "build"
   ],
-  "repository": "entwicklerstube/babel-plugin-root-import",
+  "url": "https://github.com/stefan-lehmann/babel-plugin-atomatic-root-import",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stefan-lehmann/babel-plugin-atomatic-root-import"
+  },
   "scripts": {
     "test": "mocha test/*.spec.js --require config/mocha.js --compilers js:babel-core/register",
     "test-watch": "mocha test/*.spec.js --require config/mocha.js --compilers js:babel-core/register --watch",
